@@ -55,6 +55,12 @@ def search():
             tracks = [track["track"]["name"] for track in playlist["tracks"]["items"]]
             return render_template("playlist.html", tracks=tracks)
         else:
+            result = sp.search(q=playlist_name, type="playlist", limit=1)
+            if len(result["playlists"]["items"]) > 0:
+                playlist = result["playlists"]["items"][0]
+                tracks = sp.playlist_tracks(playlist["id"])["items"]
+                track_names = [track["track"]["name"] for track in tracks]
+                return render_template("playlist.html", tracks=track_names, playlist_name = playlist['name'])
             return "Playlist not found."
     else:
         return render_template("search.html")
